@@ -150,12 +150,12 @@ module.exports = function (grunt) {
       }
     },
 
-    // The following *-min tasks produce minified files in the dist folder
-    cssmin: {
-      options: {
-        root: '<%= yeoman.app %>'
-      }
-    },
+//    // The following *-min tasks produce minified files in the dist folder
+//    cssmin: {
+//      options: {
+//        root: '<%= yeoman.app %>'
+//      }
+//    },
 
 
     htmlmin: {
@@ -189,11 +189,7 @@ module.exports = function (grunt) {
             dest: '<%= yeoman.dist %>',
             src: [
               '*.{ico,png,txt}',
-              '.htaccess',
-              '*.html',
-              'views/{,*/}*.html',
-              'images/{,*/}*.{webp}',
-              'fonts/*'
+              '*.html'
             ]
           },
           {

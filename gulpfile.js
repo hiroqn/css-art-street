@@ -29,7 +29,6 @@ gulp.task('jade', function () {
     return gulp.src('app/index.html')
         .pipe(gulp.dest('dist'));
     //return gulp.src('app/index.jade')
-    //    //.pipe($.changed('app', {extension: '.jade'}))
     //    .pipe($.jade({
     //        locals: {}
     //    }))

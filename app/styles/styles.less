@@ -1,6 +1,37 @@
 @import "normalize.less";
 @import "util";
-@import "variables";
+
+@desertColor: #EDD8AC;
+
+@skyColor: #89BDDE;
+@sunsetColor: #d35400;
+@nightColor: #11114c;
+
+@roadColor: #555555;
+@roadEdge: lighten(@roadColor, 20%);
+@cloudColor: #ecf0f1;
+
+@signColor: #e74c3c;
+@signYellow: #f1c40f;
+@signBlue: #2980b9;
+@poleColor: #bdc3c7;
+@poleShadow: darken(@poleColor, 20%);
+
+@sunColor: #f1c40f;
+
+/* base */
+@perspective: 1000px;
+@displayWidth: 1280px;
+@displayHeight: 720px;
+
+@groundPosition: 300px;
+@centerX: @displayWidth /2 + 250px;
+@centerY: @displayHeight/2;
+/* road */
+
+@roadWidth: 2000px;
+@roadHeight: 2000px;
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -42,6 +73,9 @@
   background-color: @desertColor;
 }
 
+body {
+  background-color: #eeeeee;
+}
 
 .perspective {
   transform-style: preserve-3d;
@@ -51,6 +85,27 @@
   > * {
     position: absolute;
   }
+}
+
+.screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -@displayWidth / 2;
+  margin-top: -@displayHeight / 2;
+  width: @displayWidth;
+  height: @displayHeight;
+  overflow: hidden;
+  background-color: @desertColor;
+  perspective: @displayWidth;
+}
+
+.view {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  transform-origin: left top;
 }
 
 /* road */
@@ -104,7 +159,7 @@
     width: @roadWidth / 2 - 45px;
     height: @roadHeight/4;
     font-weight: bold;
-    font-family: Verdana;
+    font-family: Verdana, serif;
   }
 }
 .road--pos0 {

@@ -35,7 +35,7 @@ gulp.task('jade', function () {
 
 gulp.task('serve', ['jade', 'styles'], function (cb) {
     browserSync({
-        files: '{.tmp,dist}/**/*',
+        files: 'dist/**/*',
         server: {
             baseDir: ['dist']
         },

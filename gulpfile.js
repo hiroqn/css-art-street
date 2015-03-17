@@ -26,13 +26,11 @@ gulp.task('styles', function () {
 });
 
 gulp.task('jade', function () {
-    return gulp.src('app/index.html')
+    return gulp.src('app/index.jade')
+        .pipe($.jade({
+            locals: {}
+        }))
         .pipe(gulp.dest('dist'));
-    //return gulp.src('app/index.jade')
-    //    .pipe($.jade({
-    //        locals: {}
-    //    }))
-    //    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('serve', ['jade', 'styles'], function (cb) {

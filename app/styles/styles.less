@@ -45,46 +45,8 @@
   box-sizing: border-box;
 }
 
-.screen__fixed {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: #eeeeee;
-}
-
-.screen__abs {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-.screen__view {
-  margin-left: -@displayWidth /2;
-  margin-top: -@displayHeight/2;
-  height: @displayHeight;
-  width: @displayWidth;
-  perspective: @perspective + 50px;
-  transform-origin: left top;
-  transform-style: preserve-3d;
-  overflow: hidden;
-  position: relative;
-  background-color: @desertColor;
-}
-
 body {
   background-color: #eeeeee;
-}
-
-.perspective {
-  transform-style: preserve-3d;
-  transform-origin: left top;
-  transform: translate3d(@centerX, @centerY, -1200px);  // -@perspective
-  .my-transition;
-  > * {
-    position: absolute;
-  }
 }
 
 .screen {
@@ -106,49 +68,43 @@ body {
   left: 50%;
   transform-style: preserve-3d;
   transform-origin: left top;
+  transform: translateZ(-@displayWidth);
+  transition: transform 1000ms linear 0ms;
+  > * {
+    position: absolute;
+  }
 }
 
-/* road */
-.road-first,
-.road-middle,
-.road-last{
+#step1:target ~ .screen .view{
+  transform: translateZ(@roadHeight * 5);
+}
+
+#step2:target ~ .screen .view{
+  transform: translateZ(@roadHeight * 10);
+}
+
+#step3:target ~ .screen .view{
+  transform: translateZ(@roadHeight * 15);
+}
+
+#step4:target ~ .screen .view{
+  transform: translateZ(@roadHeight * 20);
+}
+// road
+
+.road {
   width: @roadWidth;
-  height: @roadHeight;
+  height: @roadHeight + 100px;
   background-color: @roadColor;
   border-width: 0 20px;
   border-style: solid;
   border-color: @roadEdge;
-
-}
-.road-middle {
-  transform-origin: top center;
-  &:before, &:after{
-    content: '';
-    position: absolute;
-    top: 0px;
-    width: 50px;
-    height: @roadHeight;
-    background-color: @cloudColor;
-
-  }
-  &:before {
-    right: 50px;
-  }
-  &:after {
-    left: 50px;
-  }
-  .line {
-    width: 50px;
-    height: @roadHeight/2;
-    background-color: @cloudColor;
-    margin: auto;
-  }
+  transform-origin: top left;
 }
 
-.generate-road(20);
-
-.road-first {
-  .line {
+.road--pos0 {
+  transform: translate3d(-@roadWidth/2, @groundPosition, 0) rotateX(90deg);
+  .road__line {
     border-right: 50px solid @cloudColor;
     border-top: 100px solid @cloudColor;
     color: @cloudColor;
@@ -162,58 +118,70 @@ body {
     font-family: Verdana, serif;
   }
 }
-.road--pos0 {
-  transform-origin: top left;
-  transform: translate3d(-@roadWidth/2, @groundPosition, 0px) rotateX(90deg);
+
+.iter-road-pos(@n, @i: 1) when (@i =< @n) {
+  .road--pos@{i} {
+    transform: translate3d(-@roadWidth/2, @groundPosition, -@roadHeight * @i) rotateX(90deg);
+    &:before, &:after{
+      content: '';
+      position: absolute;
+      top: 0px;
+      width: 50px;
+      height: @roadHeight;
+      background-color: @cloudColor;
+    }
+    &:before {
+      right: 50px;
+    }
+    &:after {
+      left: 50px;
+    }
+    .road__line {
+      width: 50px;
+      height: @roadHeight/2;
+      background-color: @cloudColor;
+      margin: auto;
+    }
+  }
+  .iter-road-pos(@n, (@i + 1));
 }
 
-.road-last {
-  border-radius: 0 0 10% 10%;
-  .credit {
-    transform-origin: center center;
-    transform: translate(700px, 0px) rotate(145deg);
+.iter-road-pos(20);
+
+.road--pos21 {
+  transform: translate3d(-@roadWidth/2, @groundPosition, -@roadHeight * 21) rotateX(90deg);
+  .road__credit {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 120px;
+    color: @cloudColor;
     position: absolute;
-    p {
-      text-align: center;
-      font-size: 120px;
-      color: @cloudColor;
-      font-weight: bold;
-      font-family: "Comic Sans MS";
-    }
+    top: @roadHeight * 2 / 3;
+    left: @roadWidth / 2;
   }
 }
 
-.road--pos21 {
-  transform-origin: top center;
-  transform: translate3d(-@roadWidth/2, @groundPosition, -@roadHeight * 20) rotateX(-90deg) rotateY(180deg);
-}
-
-.arrow{
-  right: 450px;
+.road__arrow{
+  left: 450px;
   top:0;
   position: absolute;
   width: 100px;
   height: 1000px;
-  opacity: 0;
-  .my-transition();
   &:before {
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) @cloudColor;
+    border-width: 0 50px 500px;
+    content: '';
+    display: block;
+    transform: translate(-25px, 0px);
+  }
+  &:after {
     width: 50px;
     height: 500px;
     background-color: @cloudColor;
     content: '';
     display: block;
   }
-  &:after {
-    border-style: solid;
-    border-color: @cloudColor rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-    border-width: 500px 50px 0;
-    content: '';
-    display: block;
-    transform: translate(-25px, 0px);
-  }
-}
-.arrow--visibility1 {
-  opacity: 1;
 }
 /* sign */
 

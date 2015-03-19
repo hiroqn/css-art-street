@@ -3,12 +3,6 @@
   height: @length;
 }
 
-.generate-road(@n, @i: 1) when (@i =< @n) {
-  .road--pos@{i} {
-    transform: translate3d(-@roadWidth/2, @groundPosition, -@roadHeight * (@i - 1)) rotateX(-90deg) rotateY(180deg);
-  }
-  .generate-road(@n, (@i + 1));
-}
 
 .generate-sun-bar(@n, @i: 1) when (@i =< @n) {
   .sun__bar--pos@{i} {

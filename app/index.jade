@@ -7,14 +7,33 @@ html
     title= 'Street!'
     link(rel='stylesheet', href='styles/styles.css')
   body
+    - var i = 1
+    while i <= 4
+      div(id='step' + i++)
     .screen
       .sky
         .sun
           .sun__inner
-            - var i = 1
+            - i = 1
             while i <= 8
               .sun__bar(class='sun__bar--pos' + i++)
             .sun__center
         .moon
           .moon__inner
       .view
+        - i = 1
+        .road.road--pos0
+          .road__line='STOP'
+        while i <= 20
+          .road(class='road--pos' + i)
+            .road__line
+            if (i - 1) % 5 === 0
+              a(href='#step' + ((i + 4) / 5))
+                .road__arrow(class='road__arrow--pos' + i)
+          - i++
+        .road.road--pos21
+         .road__credit.
+           created by hiroqn.
+        .sign-closed.sign--pos1
+          .pole
+          .circle

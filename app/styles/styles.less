@@ -1,5 +1,4 @@
 @import "normalize.less";
-@import "util";
 
 @desertColor: #EDD8AC;
 
@@ -31,6 +30,11 @@
 
 @roadWidth: 2000px;
 @roadHeight: 2000px;
+
+.width-and-height(@length){
+  width: @length;
+  height: @length;
+}
 
 * {
   -webkit-box-sizing: border-box;
@@ -188,15 +192,15 @@ body {
 @signRadius: 150px;
 @poleHeight: 1200px;
 @shadowWidth: 20px;
-.sign {
 
+.sign-closed, .sign-stop, .sign-dead, .sign-park {
   width: @signRadius*2;
   height: @poleHeight;
   > * {
     position: absolute;
   }
 
-  .pole {
+  &__pole {
     width: 0;
     height: @poleHeight;
     border-left: 20px solid @poleColor;
@@ -204,8 +208,9 @@ body {
     transform: translate(@signRadius - 20px, 0px);
   }
 }
-.closed-sign {
-  .circle {
+
+.sign-closed {
+  &__circle {
     border-radius: 50%;
     background-color: white;
     .width-and-height(@signRadius*2 - @shadowWidth*2);
@@ -226,11 +231,10 @@ body {
       transform: translate(-20px,@signRadius - @shadowWidth - 40px - 10px) rotate(-30deg);
     }
   }
-
 }
 
-.stop-sign {
-  .circle {
+.sign-stop {
+  &__circle {
     border-radius: 50%;
     .width-and-height(@signRadius*2);
     background-color: @signColor;
@@ -246,8 +250,8 @@ body {
   }
 }
 
-.dead-sign {
-  .square {
+.sign-dead {
+  &__square {
     .width-and-height(@signRadius*2);
     border-radius: 10%;
     background-color: @signYellow;
@@ -270,8 +274,8 @@ body {
   }
 }
 
-.park-sign {
-  .square {
+.sign-park {
+  &__square {
     .width-and-height(@signRadius*2);
     border-radius: 10%;
     background-color: @signBlue;
@@ -366,12 +370,17 @@ body {
   overflow: hidden;
 }
 
+.generate-sun-bar(@n, @i: 1) when (@i =< @n) {
+  .sun__bar--pos@{i} {
+    transform: rotate((@i - 1) * 45deg);
+  }
+  .generate-sun-bar(@n, (@i + 1));
+}
+
 .sun {
   transform-origin: top left;
   transform: translate(@displayWidth /2 - 150px - 320px, @displayHeight /2 - 150px - 320px) scale(0.5) ;
   position: absolute;
-  .my-transition;
-
 
   &__inner {
     width: 400px;
@@ -401,7 +410,6 @@ body {
       width: 0;
       height: 0;
       content: '';
-      .my-transition;
     }
   }
   &__center {
@@ -425,7 +433,6 @@ body {
 }
 
 .moon {
-  .my-transition;
   overflow: hidden;
   position: absolute;
   transform-origin: top left;
@@ -449,8 +456,6 @@ body {
     }
   }
 }
-
-
 
 @keyframes shake-moon {
   from {

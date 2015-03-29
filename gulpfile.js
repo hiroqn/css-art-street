@@ -44,3 +44,7 @@ gulp.task('serve', ['jade', 'styles'], function (cb) {
     gulp.watch(['app/**/*.jade'], ['jade',  browserSync.reload]);
     gulp.watch(['app/**/*.less'], ['styles', browserSync.reload]);
 });
+
+gulp.task('default', ['jade', 'styles'], function (cb) {
+  cb();
+});

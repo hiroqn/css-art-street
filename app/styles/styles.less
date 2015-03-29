@@ -94,6 +94,173 @@ body {
 #step4:target ~ .screen .view{
   transform: translateZ(@roadHeight * 20);
 }
+//sky
+
+.sky {
+  position: absolute;
+  height: @displayHeight/2;
+  width: @displayWidth;
+  background-color: @skyColor;
+  overflow: hidden;
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
+}
+
+.generate-sun-bar(@n, @i: 1) when (@i =< @n) {
+  .sun__bar--pos@{i} {
+    transform: rotate((@i - 1) * 45deg);
+  }
+  .generate-sun-bar(@n, (@i + 1));
+}
+
+.sun {
+  transform-origin: top left;
+  transform: translate(@displayWidth /2 - 150px - 320px, @displayHeight /2 - 150px - 320px) scale(0.5) ;
+  position: absolute;
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
+
+  &__inner {
+    width: 400px;
+    height: 400px;
+    transform-origin: center center;
+    animation-name: rotate-sun;
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    > * {
+      position: absolute;
+    }
+  }
+
+  .generate-sun-bar(8);
+
+  &__bar {
+    width: 30px;
+    height: 200px;
+    left: 185px;
+    transform-origin: bottom center;
+    &:after {
+      transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
+      position: absolute;
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: @sunColor;
+      border-width: 0 15px 80px;
+      width: 0;
+      height: 0;
+      content: '';
+      opacity: 1;
+    }
+  }
+  &__center {
+    top: 100px;
+    left: 100px;
+    border-radius: 50%;
+    background-color: @sunColor;
+    width: 200px;
+    height: 200px;
+  }
+}
+
+
+@keyframes rotate-sun {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.moon {
+  overflow: hidden;
+  position: absolute;
+  transform-origin: top left;
+  transform: translate(@displayWidth /2 - 150px - 400px, @displayHeight /2 - 150px - 400px) scale(0.75);
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
+  &__inner {
+    transform-origin: center center;
+    animation-name: shake-moon;
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    .width-and-height(200px);
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    &:after {
+      position: absolute;
+      .width-and-height(130px);
+      border-radius: 50%;
+      box-shadow: @sunColor 0 0 0 100px;
+      content: '';
+    }
+  }
+}
+
+@keyframes shake-moon {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-60deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+#step1:target ~ .screen .sun{
+  transform: translate(@displayWidth /2 - 150px - 160px, @displayHeight /2 - 150px - 160px) scale(0.5) ;
+  &__bar:after {
+    border-radius: 50%;
+    border: 30px solid @sunColor;
+  }
+}
+
+#step2:target ~ .screen {
+  .sky {
+    background-color: @sunsetColor;
+  }
+  .sun {
+    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 - 150px) scale(0.75) ;
+    &__bar:after {
+      opacity: 0;
+    }
+  }
+}
+
+#step3:target ~ .screen {
+  .sky {
+    background-color: @nightColor;
+  }
+  .sun {
+    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 + 50px) scale(0.75) ;
+    &__bar:after {
+      opacity: 0;
+    }
+    &__inner {
+      animation-name: none;
+    }
+  }
+  .moon {
+    transform: translate(@displayWidth /2 - 150px - 200px, @displayHeight /2 - 150px - 200px) scale(0.75);
+  }
+}
+
+#step4:target ~ .screen {
+  .sky {
+    background-color: @nightColor;
+  }
+  .sun {
+    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 + 50px) scale(0.75) ;
+    &__bar {
+      opacity: 0;
+    }
+  }
+  .moon {
+    transform: translate(@displayWidth /2 - 150px - 200px, @displayHeight /2 - 150px - 200px) scale(0.75);
+  }
+}
+
 // road
 
 .road {
@@ -119,7 +286,7 @@ body {
     width: @roadWidth / 2 - 45px;
     height: @roadHeight/4;
     font-weight: bold;
-    font-family: Verdana, serif;
+    font-family: sans-serif;
   }
 }
 
@@ -318,41 +485,36 @@ body {
 @boardWidth: 300px;
 @boardHeight: 600px;
 
-.board {
-}
 
-.signboard {
+.board {
   width: @boardWidth;
   height: 600px;
   position: relative;
-  .pole() {
-    position: absolute;
+  &__pole {
     width: 20px;
     height: 600px;
     background: @frameColor;
+    position: absolute;
   }
-  .signboard__pole--left{
-    .pole();
+  &__pole--left{
     left: 0px;
   }
-  .signboard__pole--right{
-    .pole();
+  &__pole--right{
     right:0px;
-
   }
-  .signboard__board {
+  &__main {
     width: @boardWidth;
     height: @boardHeight - 150px;
     border: 20px solid @frameColor;
     background-color: @boardColor;
-    font-family: "Courier";
+    font-family: serif;
     h2 {
       font-size: 65px;
       margin: 30px 0;
       color: @cloudColor;
       text-align: center;
     }
-    p {
+    h3 {
       font-size: 45px;
       color: @cloudColor;
       margin: 30px;
@@ -360,206 +522,7 @@ body {
       font-weight: bold;
     }
   }
-}
-.signboard--pos {
-  transform: translate3d(-@roadWidth/4 - @boardWidth/2, @groundPosition - @boardHeight, -@roadHeight * 21 - 50px);
-}
-
-
-.sky {
-  position: absolute;
-  height: @displayHeight/2;
-  width: @displayWidth;
-  background-color: @skyColor;
-  overflow: hidden;
-}
-
-.generate-sun-bar(@n, @i: 1) when (@i =< @n) {
-  .sun__bar--pos@{i} {
-    transform: rotate((@i - 1) * 45deg);
-  }
-  .generate-sun-bar(@n, (@i + 1));
-}
-
-.sun {
-  transform-origin: top left;
-  transform: translate(@displayWidth /2 - 150px - 320px, @displayHeight /2 - 150px - 320px) scale(0.5) ;
-  position: absolute;
-
-  &__inner {
-    width: 400px;
-    height: 400px;
-    transform-origin: center center;
-    animation-name: rotate-sun;
-    animation-duration: 12s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    > * {
-      position: absolute;
-    }
-  }
-
-  .generate-sun-bar(8);
-
-  &__bar {
-    width: 30px;
-    height: 200px;
-    left: 185px;
-    transform-origin: bottom center;
-    &:after {
-      position: absolute;
-      border-style: solid;
-      border-color: transparent;
-      border-bottom-color: @sunColor;
-      border-width: 0 15px 80px;
-      width: 0;
-      height: 0;
-      content: '';
-    }
-  }
-  &__center {
-    top: 100px;
-    left: 100px;
-    border-radius: 50%;
-    background-color: @sunColor;
-    width: 200px;
-    height: 200px;
-  }
-}
-
-
-@keyframes rotate-sun {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.moon {
-  overflow: hidden;
-  position: absolute;
-  transform-origin: top left;
-  transform: translate(@displayWidth /2 - 150px - 400px, @displayHeight /2 - 150px - 400px) scale(0.75);
-  &__inner {
-    transform-origin: center center;
-    animation-name: shake-moon;
-    animation-duration: 12s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    .width-and-height(200px);
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    &:after {
-      position: absolute;
-      .width-and-height(130px);
-      border-radius: 50%;
-      box-shadow: @sunColor 0 0 0 100px;
-      content: '';
-    }
-  }
-}
-
-@keyframes shake-moon {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(-60deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-/* animation */
-
-#step1:target ~ .screen__abs {
-  .perspective {
-    transform: translate3d(@centerX, @centerY, @roadHeight * 5);
-  }
-  .sun {
-    transform: translate(@displayWidth /2 - 150px - 160px, @displayHeight /2 - 150px - 160px) scale(0.5) ;
-    &__bar:after {
-      border-radius: 50%;
-      border: 30px solid @sunColor;
-    }
-  }
-  .arrow--visibility1 {
-    opacity: 0;
-  }
-  .arrow--visibility2 {
-    opacity: 1;
-  }
-}
-
-#step2:target ~ .screen__abs  {
-  .perspective {
-    transform: translate3d(@centerX, @centerY, @roadHeight * 10);
-  }
-  .sky {
-    background-color: @sunsetColor;
-  }
-  .sun {
-    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 - 150px) scale(0.75) ;
-    &__bar:after {
-      border: none;
-    }
-  }
-  .arrow--visibility1 {
-    opacity: 0;
-  }
-  .arrow--visibility3 {
-    opacity: 1;
-  }
-}
-
-#step3:target ~ .screen__abs {
-  .perspective {
-    transform: translate3d(@centerX, @centerY, @roadHeight * 15);
-  }
-  .sky {
-    background-color: @nightColor;
-  }
-  .sun {
-    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 + 50px) scale(0.75) ;
-    &__bar:after {
-      border: none;
-    }
-    &__inner {
-      animation-name: none;
-    }
-  }
-  .moon {
-    transform: translate(@displayWidth /2 - 150px - 200px, @displayHeight /2 - 150px - 200px) scale(0.75);
-  }
-  .arrow--visibility1 {
-    opacity: 0;
-  }
-  .arrow--visibility4 {
-    opacity: 1;
-  }
-}
-
-#step4:target ~ .screen__abs {
-  .perspective {
-    transform: translate3d(@centerX, @centerY, @roadHeight * 20);
-  }
-  .sky {
-    background-color: @nightColor;
-  }
-  .sun {
-    transform: translate(@displayWidth /2 - 150px,@displayHeight /2 + 50px) scale(0.75) ;
-    &__bar {
-      border: none;
-    }
-  }
-  .moon {
-    transform: translate(@displayWidth /2 - 150px - 200px, @displayHeight /2 - 150px - 200px) scale(0.75);
-  }
-  .arrow--visibility1 {
-    opacity: 0;
+  &--pos {
+    transform: translate3d(-@roadWidth/4 - @boardWidth/2, @groundPosition - @boardHeight, -@roadHeight * 21 - 50px);
   }
 }

@@ -48,8 +48,6 @@ gulp.task('serve', ['jade', 'styles'], function (cb) {
   gulp.watch(['app/**/*.less'], ['styles', browserSync.reload]);
 });
 
-gulp.task('default', ['jade', 'styles'], function () {});
-
 // Deployment to GitHub using git.
 gulp.task('deploy', ['default'], function (done) {
   runSequence('deploy:commit', 'deploy:push', done);
